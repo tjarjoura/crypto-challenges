@@ -39,7 +39,7 @@ static char most_frequent_byte(char *str)
         bytes[str[i]].count++;
 
     sort(bytes, 255);
-    
+
     return bytes[0].byte;
 }
 
@@ -50,7 +50,7 @@ static int printable(char *str)
         if ((str[i] < 32) || (str[i] > 127))
             return 0;
     }
-    
+
     return 1;
 }
 
@@ -59,10 +59,10 @@ void decode(char *hex)
     char str[1024], key, byte;
     int i, j;
 
-    hex2str(hex, str, 1024); 
+    hex2str(hex, str, 1024);
     byte = most_frequent_byte(str);
-    
-    for (j = 0; freq_str[j] != '\0'; j++) { 
+
+    for (j = 0; freq_str[j] != '\0'; j++) {
         key = byte ^ freq_str[j];
         for (i = 0; str[i] != '\0'; i++)
             str[i] ^= key;
@@ -73,7 +73,7 @@ void decode(char *hex)
 
 int main(int argc, char **argv)
 {
-    FILE *strings_file; 
+    FILE *strings_file;
     char line_buffer[100], input;
     if (argc < 2)
         exit(0);

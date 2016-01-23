@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-const char base64_digits[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const char base64_digits[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 char *get_base64(char *in, char *out, int n)
 {
@@ -25,7 +25,6 @@ char *get_base64(char *in, char *out, int n)
 
         num_buf[j] = '\0';
         num = strtol(num_buf, NULL, 16);
-        printf("num_buf = %s, num = %d\n", num_buf, num);
 
         if ((k + 5) >= n) {
             fprintf(stderr, "get_base64(): provided buffer too small\n");
@@ -34,10 +33,10 @@ char *get_base64(char *in, char *out, int n)
 
         out[k++] = base64_digits[num >> 18]; /* leftmost 6 bit chunk */
         out[k++] = base64_digits[(num >> 12) & 0x3F]; /* center-left 6 bit chunk */
-        out[k++] = (n_sig > 1) ? base64_digits[(num >> 6) & 0x3F] : '='; /* center-right 6 bit chunk */ 
+        out[k++] = (n_sig > 1) ? base64_digits[(num >> 6) & 0x3F] : '='; /* center-right 6 bit chunk */
         out[k++] = (n_sig > 2) ? base64_digits[num & 0x3F] : '='; /* rightmost 6 bit chunk */
     }
-    
+
     out[k] = '\0';
     return out;
 }
@@ -65,29 +64,29 @@ static char get_ascii(int c)
 }
 
 char *fixed_xor(char *str_a, char *str_b, char *out, int n)
-{ 
+{
     int a, b, i;
     for (i = 0; i < n; i++) {
         a = get_digit(str_a[i]);
         b = get_digit(str_b[i]);
-        out[i] = get_ascii(a ^ b); 
+        out[i] = get_ascii(a ^ b);
     }
 
-    out[i] = '\0'; 
+    out[i] = '\0';
 
     return out;
-} 
+}
 
 char *hex2str(char *hex, char *str, int n)
 {
     int i, j = 0, stage = 0;
     char c;
 
-    for (i = 0; hex[i] != '\0'; i++) { 
+    for (i = 0; hex[i] != '\0'; i++) {
        if (stage == 1) {
            c = (c * 16) + get_digit(hex[i]);
            stage = 0;
-           
+
            if ((j + 1) >= n) {
                fprintf(stderr, "hex2str(): provided buffer too small\n");
                return (str = NULL);
@@ -103,3 +102,4 @@ char *hex2str(char *hex, char *str, int n)
     str[j] = '\0';
     return str;
 }
+
